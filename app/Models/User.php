@@ -2,7 +2,6 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -42,4 +41,19 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
+
+    /**
+     * Generate or return the existing API token.
+     */
+    public function getApiToken() {
+        if (!$this->tokens()->count()) {
+            return $this->createToken('dashboard-token')->plainTextToken;
+        }
+        return $this->tokens()->first()->plainTextToken;
+    }
 }
